@@ -1,38 +1,44 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { fromRepoRoot } from "../mcp-server/src/paths";
-import type { DesignFrame, DesignNode, FigmaLikeFixture } from "../mcp-server/src/types";
+import type {
+  DesignFrame,
+  DesignNode,
+  FigmaComponentPropertyValue,
+  FigmaLikeFixture
+} from "../mcp-server/src/types";
 
-const pluginNamespace = "figma-contract-mcp-demo";
-const defaultInputPath = "fixtures/figma/raw/edit-profile-modal.figma-file.mock.json";
+const defaultInputPath = "fixtures/figma/mcp/edit-profile-modal.mcp-context.json";
 const defaultOutputPath = "fixtures/figma/edit-profile-modal.fixture.json";
 const defaultFrameId = "frame-edit-profile";
 
 const [inputPath = defaultInputPath, outputPath = defaultOutputPath, frameId = defaultFrameId] =
   process.argv.slice(2);
 
-const rawSnapshot = await readJson<RawFigmaFileSnapshot>(inputPath);
-const frame = findNode(rawSnapshot.document, frameId);
+const mcpCapture = await readJson<FigmaMcpCaptureFixture>(inputPath);
+const metadataRoot = parseSparseXml(mcpCapture.toolResults.get_metadata.content);
+const frame = findMetadataNode(metadataRoot, frameId);
 
 if (!frame) {
-  throw new Error(`Frame not found in raw Figma mock: ${frameId}`);
+  throw new Error(`Frame not found in Figma MCP metadata fixture: ${frameId}`);
 }
 
 const fixture: FigmaLikeFixture = {
   schemaVersion: "figma-like-fixture/v2",
-  source: "normalized-from-local-figma-api-shaped-fixture",
+  source: "normalized-from-local-figma-mcp-fixture",
   file: {
-    id: rawSnapshot.file.key,
-    name: rawSnapshot.file.name
+    id: mcpCapture.file.key,
+    name: mcpCapture.file.name
   },
   rawSource: {
-    schemaVersion: rawSnapshot.schemaVersion,
-    source: rawSnapshot.source,
+    schemaVersion: mcpCapture.schemaVersion,
+    source: mcpCapture.source,
     path: inputPath,
-    capturedAt: rawSnapshot.capturedAt,
-    documentRootId: rawSnapshot.document.id
+    capturedAt: mcpCapture.capturedAt,
+    documentRootId: mcpCapture.selection.nodeId,
+    tools: Object.keys(mcpCapture.toolResults)
   },
-  frames: [normalizeFrame(frame, rawSnapshot)]
+  frames: [normalizeFrame(frame, mcpCapture)]
 };
 
 const absoluteOutputPath = fromRepoRoot(outputPath);
@@ -41,168 +47,138 @@ await fs.writeFile(absoluteOutputPath, `${JSON.stringify(fixture, null, 2)}\n`, 
 
 console.log(`Normalized ${inputPath} -> ${outputPath}`);
 
-type RawFigmaFileSnapshot = {
+type FigmaMcpCaptureFixture = {
   schemaVersion: string;
   source: string;
   capturedAt?: string;
   file: {
     key: string;
     name: string;
-    [key: string]: unknown;
+    url?: string;
   };
-  document: RawFigmaNode;
-  components?: Record<string, RawFigmaComponentMetadata>;
-  componentSets?: Record<string, RawFigmaComponentSetMetadata>;
-  styles?: Record<string, unknown>;
+  selection: {
+    nodeId: string;
+    name: string;
+    type: string;
+  };
+  toolResults: {
+    get_metadata: {
+      format: "sparse-xml";
+      content: string;
+    };
+    get_design_context?: {
+      format: string;
+      content: string;
+    };
+    get_code_connect_map: {
+      componentPackage: string;
+      mappings: Record<string, FigmaMcpCodeConnectEntry>;
+    };
+    get_variable_defs?: {
+      variables?: Record<string, unknown>;
+      styles?: Record<string, unknown>;
+    };
+    [toolName: string]: unknown;
+  };
 };
 
-type RawFigmaNode = {
-  id: string;
-  name: string;
-  type: string;
-  description?: string;
+type FigmaMcpCodeConnectEntry = {
+  componentName: string;
+  importName?: string;
+  figmaComponent?: string;
   componentId?: string;
-  componentProperties?: Record<string, RawComponentProperty>;
-  children?: RawFigmaNode[];
-  absoluteBoundingBox?: FigmaRectangle;
-  absoluteRenderBounds?: FigmaRectangle | null;
-  layoutMode?: "HORIZONTAL" | "VERTICAL" | "NONE";
-  primaryAxisAlignItems?: string;
-  counterAxisAlignItems?: string;
-  primaryAxisSizingMode?: string;
-  counterAxisSizingMode?: string;
-  itemSpacing?: number;
-  paddingLeft?: number;
-  paddingRight?: number;
-  paddingTop?: number;
-  paddingBottom?: number;
-  boundVariables?: Record<string, FigmaVariableAlias>;
-  characters?: string;
-  style?: Record<string, unknown>;
-  overrides?: Array<Record<string, unknown>>;
-  sharedPluginData?: Record<string, Record<string, string>>;
-  [key: string]: unknown;
+  source?: string;
+  label?: string;
+  version?: string;
+  snippet?: string;
+  snippetImports?: string[];
+  snippetNestedFunctions?: string[];
+  designProperties?: Record<
+    string,
+    string | boolean | number | FigmaComponentPropertyValue
+  >;
+  text?: Record<string, string>;
+  contractPath?: string;
 };
 
-type RawComponentProperty = {
-  type: string;
-  value: string | boolean | number;
-  preferredValues?: unknown[];
-  boundVariables?: Record<string, unknown>;
+type SparseXmlNode = {
+  tag: string;
+  attrs: Record<string, string>;
+  children: SparseXmlNode[];
 };
 
-type RawFigmaComponentMetadata = {
-  key: string;
-  name: string;
-  description?: string;
-  componentSetId?: string;
-  remote?: boolean;
-  [key: string]: unknown;
-};
-
-type RawFigmaComponentSetMetadata = {
-  key: string;
-  name: string;
-  description?: string;
-  [key: string]: unknown;
-};
-
-type FigmaRectangle = {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-};
-
-type FigmaVariableAlias = {
-  type: "VARIABLE_ALIAS";
-  id: string;
-};
-
-async function readJson<T>(relativePath: string): Promise<T> {
-  const raw = await fs.readFile(fromRepoRoot(relativePath), "utf8");
-  return JSON.parse(raw) as T;
+function normalizeFrame(
+  node: SparseXmlNode,
+  capture: FigmaMcpCaptureFixture
+): DesignFrame {
+  return normalizeNode(node, capture) as DesignFrame;
 }
 
-function findNode(node: RawFigmaNode, nodeId: string): RawFigmaNode | null {
-  if (node.id === nodeId) {
-    return node;
-  }
-
-  for (const child of node.children ?? []) {
-    const found = findNode(child, nodeId);
-    if (found) {
-      return found;
-    }
-  }
-
-  return null;
-}
-
-function normalizeFrame(node: RawFigmaNode, snapshot: RawFigmaFileSnapshot): DesignFrame {
-  return normalizeNode(node, snapshot) as DesignFrame;
-}
-
-function normalizeNode(node: RawFigmaNode, snapshot: RawFigmaFileSnapshot): DesignNode {
-  const componentMetadata =
-    node.componentId === undefined ? undefined : snapshot.components?.[node.componentId];
-  const componentSetMetadata =
-    componentMetadata?.componentSetId === undefined
-      ? undefined
-      : snapshot.componentSets?.[componentMetadata.componentSetId];
+function normalizeNode(
+  node: SparseXmlNode,
+  capture: FigmaMcpCaptureFixture
+): DesignNode {
+  const mapping = capture.toolResults.get_code_connect_map.mappings[node.attrs.id];
   const normalized: DesignNode = {
-    id: node.id,
-    name: node.name,
-    type: node.type
+    id: requireAttr(node, "id"),
+    name: requireAttr(node, "name"),
+    type: normalizeNodeType(node)
   };
-  const layout = normalizeLayout(node);
-  const text = collectDirectText(node);
-  const children = (node.children ?? [])
-    .filter((child) => child.type !== "TEXT")
-    .map((child) => normalizeNode(child, snapshot));
+  const layout = normalizeLayout(node.attrs);
+  const bounds = normalizeBounds(node.attrs);
 
-  if (node.description) {
-    normalized.description = node.description;
+  if (node.attrs.description) {
+    normalized.description = node.attrs.description;
   }
 
-  if (node.componentId) {
-    normalized.componentId = node.componentId;
+  if (mapping?.componentId) {
+    normalized.componentId = mapping.componentId;
   }
 
-  if (componentMetadata) {
-    normalized.componentSet = componentMetadata.name;
+  if (mapping?.figmaComponent) {
+    normalized.componentSet = mapping.figmaComponent;
     normalized.componentMetadata = {
-      key: componentMetadata.key,
-      name: componentMetadata.name,
-      componentSetId: componentMetadata.componentSetId,
-      componentSetName: componentSetMetadata?.name,
-      remote: componentMetadata.remote ?? false
+      key: mapping.componentId ?? `mcp:${normalized.id}`,
+      name: mapping.figmaComponent,
+      componentSetId: mapping.componentId,
+      componentSetName: mapping.figmaComponent,
+      remote: true
     };
   }
 
-  if (node.componentProperties) {
-    normalized.componentProperties = node.componentProperties;
+  if (mapping?.designProperties) {
+    normalized.componentProperties = mapping.designProperties;
   }
 
-  if (Object.keys(text).length > 0) {
-    normalized.text = text;
+  if (mapping?.text && Object.keys(mapping.text).length > 0) {
+    normalized.text = mapping.text;
+  }
+
+  if (mapping) {
+    normalized.codeConnect = {
+      componentName: mapping.componentName,
+      importName: mapping.importName ?? mapping.componentName,
+      source: mapping.source,
+      label: mapping.label,
+      version: mapping.version,
+      snippetImports: mapping.snippetImports ?? [],
+      snippet: mapping.snippet,
+      snippetNestedFunctions: mapping.snippetNestedFunctions ?? []
+    };
   }
 
   if (layout) {
     normalized.layout = layout;
   }
 
-  if (node.absoluteBoundingBox) {
-    normalized.absoluteBoundingBox = node.absoluteBoundingBox;
+  if (bounds) {
+    normalized.absoluteBoundingBox = bounds;
+    normalized.absoluteRenderBounds = bounds;
   }
 
-  if (node.absoluteRenderBounds !== undefined) {
-    normalized.absoluteRenderBounds = node.absoluteRenderBounds;
-  }
-
-  if (node.overrides?.length) {
-    normalized.overrides = node.overrides;
-  }
+  const children = node.children
+    .filter((child) => normalizeNodeType(child) !== "TEXT")
+    .map((child) => normalizeNode(child, capture));
 
   if (children.length > 0) {
     normalized.children = children;
@@ -211,78 +187,171 @@ function normalizeNode(node: RawFigmaNode, snapshot: RawFigmaFileSnapshot): Desi
   return normalized;
 }
 
-function collectDirectText(node: RawFigmaNode): Record<string, string> {
-  const text: Record<string, string> = {};
+function parseSparseXml(xml: string): SparseXmlNode {
+  const root: SparseXmlNode = { tag: "root", attrs: {}, children: [] };
+  const stack = [root];
+  const tagPattern = /<([^!?][^>]*?)>/g;
+  let match: RegExpExecArray | null;
 
-  for (const child of node.children ?? []) {
-    if (child.type !== "TEXT" || typeof child.characters !== "string") {
+  while ((match = tagPattern.exec(xml)) !== null) {
+    const rawTag = match[1].trim();
+    if (!rawTag || rawTag.startsWith("?")) {
       continue;
     }
 
-    const key = child.sharedPluginData?.[pluginNamespace]?.textKey;
-    if (key) {
-      text[key] = child.characters;
+    if (rawTag.startsWith("/")) {
+      const closingTag = rawTag.slice(1).trim();
+      const current = stack.pop();
+      if (!current || current.tag !== closingTag) {
+        throw new Error(`Malformed sparse XML: unexpected closing tag ${closingTag}`);
+      }
+      continue;
+    }
+
+    const selfClosing = rawTag.endsWith("/");
+    const normalizedTag = selfClosing ? rawTag.slice(0, -1).trim() : rawTag;
+    const firstWhitespaceIndex = normalizedTag.search(/\s/);
+    const tag =
+      firstWhitespaceIndex === -1
+        ? normalizedTag
+        : normalizedTag.slice(0, firstWhitespaceIndex);
+    const attrText =
+      firstWhitespaceIndex === -1 ? "" : normalizedTag.slice(firstWhitespaceIndex + 1);
+    const node: SparseXmlNode = {
+      tag,
+      attrs: parseXmlAttrs(attrText),
+      children: []
+    };
+    const parent = stack.at(-1);
+    if (!parent) {
+      throw new Error("Malformed sparse XML: missing parent node");
+    }
+    parent.children.push(node);
+
+    if (!selfClosing) {
+      stack.push(node);
     }
   }
 
-  return text;
+  if (stack.length !== 1) {
+    throw new Error("Malformed sparse XML: one or more tags were not closed");
+  }
+
+  return root.children.length === 1 ? root.children[0] : root;
 }
 
-function normalizeLayout(node: RawFigmaNode): Record<string, unknown> | undefined {
+function parseXmlAttrs(input: string): Record<string, string> {
+  const attrs: Record<string, string> = {};
+  const attrPattern = /([A-Za-z_:][A-Za-z0-9_:.-]*)="([^"]*)"/g;
+  let match: RegExpExecArray | null;
+
+  while ((match = attrPattern.exec(input)) !== null) {
+    attrs[match[1]] = decodeXmlEntities(match[2]);
+  }
+
+  return attrs;
+}
+
+function decodeXmlEntities(value: string): string {
+  return value
+    .replaceAll("&quot;", "\"")
+    .replaceAll("&apos;", "'")
+    .replaceAll("&lt;", "<")
+    .replaceAll("&gt;", ">")
+    .replaceAll("&amp;", "&");
+}
+
+function findMetadataNode(node: SparseXmlNode, nodeId: string): SparseXmlNode | null {
+  if (node.attrs.id === nodeId) {
+    return node;
+  }
+
+  for (const child of node.children) {
+    const found = findMetadataNode(child, nodeId);
+    if (found) {
+      return found;
+    }
+  }
+
+  return null;
+}
+
+function normalizeNodeType(node: SparseXmlNode): string {
+  return node.attrs.type ?? node.tag.toUpperCase();
+}
+
+function normalizeLayout(attrs: Record<string, string>): Record<string, unknown> | undefined {
   const layout: Record<string, unknown> = {};
+  const width = parseOptionalNumber(attrs.width);
+  const height = parseOptionalNumber(attrs.height);
+  const gap = parseOptionalNumber(attrs.gap);
+  const padding = normalizePadding(attrs);
 
-  if (node.absoluteBoundingBox) {
-    layout.width = node.absoluteBoundingBox.width;
-    layout.height = node.absoluteBoundingBox.height;
+  if (width !== undefined) {
+    layout.width = width;
   }
 
-  if (node.layoutMode && node.layoutMode !== "NONE") {
-    layout.mode = node.layoutMode.toLowerCase();
+  if (height !== undefined) {
+    layout.height = height;
   }
 
-  const align = normalizeAlignment(node.primaryAxisAlignItems);
-  if (align) {
-    layout.align = align;
+  if (attrs.layout) {
+    layout.mode = attrs.layout;
   }
 
-  if (typeof node.itemSpacing === "number") {
-    layout.itemSpacing = node.itemSpacing;
+  if (attrs.align) {
+    layout.align = attrs.align;
   }
 
-  const gapToken = node.boundVariables?.itemSpacing?.id;
-  if (gapToken) {
-    layout.gapToken = gapToken;
+  if (gap !== undefined) {
+    layout.itemSpacing = gap;
   }
 
-  const padding = normalizePadding(node);
+  if (attrs.gapToken) {
+    layout.gapToken = attrs.gapToken;
+  }
+
   if (padding) {
     layout.padding = padding;
   }
 
-  if (node.primaryAxisSizingMode) {
-    layout.primaryAxisSizingMode = node.primaryAxisSizingMode;
-  }
-
-  if (node.counterAxisSizingMode) {
-    layout.counterAxisSizingMode = node.counterAxisSizingMode;
-  }
-
-  if (Object.keys(node.boundVariables ?? {}).length > 0) {
-    layout.boundVariables = node.boundVariables;
+  const boundVariables = normalizeBoundVariables(attrs);
+  if (boundVariables) {
+    layout.boundVariables = boundVariables;
   }
 
   return Object.keys(layout).length > 0 ? layout : undefined;
 }
 
-function normalizePadding(node: RawFigmaNode): Record<string, number> | undefined {
+function normalizeBounds(
+  attrs: Record<string, string>
+): { x: number; y: number; width: number; height: number } | undefined {
+  const x = parseOptionalNumber(attrs.x);
+  const y = parseOptionalNumber(attrs.y);
+  const width = parseOptionalNumber(attrs.width);
+  const height = parseOptionalNumber(attrs.height);
+
+  if (
+    x === undefined ||
+    y === undefined ||
+    width === undefined ||
+    height === undefined
+  ) {
+    return undefined;
+  }
+
+  return { x, y, width, height };
+}
+
+function normalizePadding(attrs: Record<string, string>): Record<string, number> | undefined {
   const padding = {
-    left: node.paddingLeft,
-    right: node.paddingRight,
-    top: node.paddingTop,
-    bottom: node.paddingBottom
+    left: parseOptionalNumber(attrs.paddingLeft),
+    right: parseOptionalNumber(attrs.paddingRight),
+    top: parseOptionalNumber(attrs.paddingTop),
+    bottom: parseOptionalNumber(attrs.paddingBottom)
   };
   const definedPadding = Object.fromEntries(
-    Object.entries(padding).filter(([, value]) => typeof value === "number")
+    Object.entries(padding).filter(([, value]) => value !== undefined)
   );
 
   return Object.keys(definedPadding).length > 0
@@ -290,17 +359,40 @@ function normalizePadding(node: RawFigmaNode): Record<string, number> | undefine
     : undefined;
 }
 
-function normalizeAlignment(value: string | undefined): string | undefined {
-  switch (value) {
-    case "MIN":
-      return "start";
-    case "CENTER":
-      return "center";
-    case "MAX":
-      return "end";
-    case "SPACE_BETWEEN":
-      return "space-between";
-    default:
-      return undefined;
+function normalizeBoundVariables(
+  attrs: Record<string, string>
+): Record<string, { type: "VARIABLE_ALIAS"; id: string }> | undefined {
+  const variables: Record<string, { type: "VARIABLE_ALIAS"; id: string }> = {};
+
+  if (attrs.gapToken) {
+    variables.itemSpacing = {
+      type: "VARIABLE_ALIAS",
+      id: attrs.gapToken
+    };
   }
+
+  return Object.keys(variables).length > 0 ? variables : undefined;
+}
+
+function parseOptionalNumber(value: string | undefined): number | undefined {
+  if (value === undefined) {
+    return undefined;
+  }
+
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : undefined;
+}
+
+function requireAttr(node: SparseXmlNode, attrName: string): string {
+  const value = node.attrs[attrName];
+  if (!value) {
+    throw new Error(`Sparse XML node <${node.tag}> is missing required ${attrName}.`);
+  }
+
+  return value;
+}
+
+async function readJson<T>(relativePath: string): Promise<T> {
+  const raw = await fs.readFile(fromRepoRoot(relativePath), "utf8");
+  return JSON.parse(raw) as T;
 }

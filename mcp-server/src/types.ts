@@ -46,6 +46,7 @@ export type FigmaLikeFixture = {
     path: string;
     capturedAt?: string;
     documentRootId: string;
+    tools?: string[];
   };
   frames: DesignFrame[];
 };

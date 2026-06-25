@@ -111,8 +111,8 @@ export default function App() {
     <main className="app-shell">
       <header className="top-bar">
         <div>
-          <h1>figma-contract-mcp-demo</h1>
-          <p>Local fixture to mapping to contract to generated React to validation</p>
+          <h1>Design Contract MCP</h1>
+          <p>Figma MCP context to mapping to contract to generated React to validation</p>
         </div>
         <span className="status-pill">context-pack.json</span>
       </header>

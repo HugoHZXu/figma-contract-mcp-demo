@@ -6,27 +6,18 @@
       "id": "mock-profile-settings-file",
       "name": "Profile Settings Demo"
     },
-    "source": "normalized-from-local-figma-api-shaped-fixture",
+    "source": "normalized-from-local-figma-mcp-fixture",
     "frame": {
       "id": "frame-edit-profile",
       "name": "Edit Profile Modal",
       "type": "FRAME",
-      "description": "Captured Figma-like design data for a single modal form demo.",
       "layout": {
         "width": 686,
         "height": 796,
         "mode": "vertical",
-        "align": "start",
+        "align": "center",
         "itemSpacing": 16,
         "gapToken": "space.4",
-        "padding": {
-          "left": 0,
-          "right": 0,
-          "top": 0,
-          "bottom": 0
-        },
-        "primaryAxisSizingMode": "FIXED",
-        "counterAxisSizingMode": "FIXED",
         "boundVariables": {
           "itemSpacing": {
             "type": "VARIABLE_ALIAS",
@@ -54,9 +45,9 @@
           "componentId": "component-modal-transactional-medium",
           "componentSet": "Dialog/Modal",
           "componentMetadata": {
-            "key": "mock-component-modal",
+            "key": "component-modal-transactional-medium",
             "name": "Dialog/Modal",
-            "componentSetId": "component-set-modal",
+            "componentSetId": "component-modal-transactional-medium",
             "componentSetName": "Dialog/Modal",
             "remote": true
           },
@@ -78,11 +69,23 @@
             "title": "Edit profile",
             "description": "Edit your profile by changing the information below."
           },
+          "codeConnect": {
+            "componentName": "Modal",
+            "importName": "Modal",
+            "source": "packages/mui/src/Modal.tsx",
+            "label": "React",
+            "version": "Code Connect CLI mock",
+            "snippetImports": [
+              "import { Modal } from \"@hugo-ui/mui\";"
+            ],
+            "snippet": "<Modal open type=\"transactional\" title=\"Edit profile\" subTitle=\"Edit your profile by changing the information below.\">{children}</Modal>",
+            "snippetNestedFunctions": []
+          },
           "layout": {
             "width": 542,
             "height": 636,
             "mode": "vertical",
-            "align": "start",
+            "align": "stretch",
             "itemSpacing": 16,
             "gapToken": "space.4",
             "padding": {
@@ -91,28 +94,10 @@
               "top": 32,
               "bottom": 24
             },
-            "primaryAxisSizingMode": "AUTO",
-            "counterAxisSizingMode": "FIXED",
             "boundVariables": {
               "itemSpacing": {
                 "type": "VARIABLE_ALIAS",
                 "id": "space.4"
-              },
-              "paddingLeft": {
-                "type": "VARIABLE_ALIAS",
-                "id": "space.8"
-              },
-              "paddingRight": {
-                "type": "VARIABLE_ALIAS",
-                "id": "space.8"
-              },
-              "paddingTop": {
-                "type": "VARIABLE_ALIAS",
-                "id": "space.8"
-              },
-              "paddingBottom": {
-                "type": "VARIABLE_ALIAS",
-                "id": "space.6"
               }
             }
           },
@@ -128,20 +113,6 @@
             "width": 542,
             "height": 636
           },
-          "overrides": [
-            {
-              "id": "node-modal-title",
-              "overriddenFields": [
-                "characters"
-              ]
-            },
-            {
-              "id": "node-modal-description",
-              "overriddenFields": [
-                "characters"
-              ]
-            }
-          ],
           "children": [
             {
               "id": "node-input-first-name",
@@ -150,9 +121,9 @@
               "componentId": "component-input-text",
               "componentSet": "Form/Input",
               "componentMetadata": {
-                "key": "mock-component-input",
+                "key": "component-input-text",
                 "name": "Form/Input",
-                "componentSetId": "component-set-input",
+                "componentSetId": "component-input-text",
                 "componentSetName": "Form/Input",
                 "remote": true
               },
@@ -178,6 +149,18 @@
                 "label": "First name",
                 "value": "Laura"
               },
+              "codeConnect": {
+                "componentName": "Input",
+                "importName": "Input",
+                "source": "packages/mui/src/Input.tsx",
+                "label": "React",
+                "version": "Code Connect CLI mock",
+                "snippetImports": [
+                  "import { Input } from \"@hugo-ui/mui\";"
+                ],
+                "snippet": "<Input label=\"First name\" />",
+                "snippetNestedFunctions": []
+              },
               "layout": {
                 "width": 478,
                 "height": 76,
@@ -202,21 +185,7 @@
                 "y": 198,
                 "width": 478,
                 "height": 76
-              },
-              "overrides": [
-                {
-                  "id": "node-input-first-name-label",
-                  "overriddenFields": [
-                    "characters"
-                  ]
-                },
-                {
-                  "id": "node-input-first-name-value",
-                  "overriddenFields": [
-                    "characters"
-                  ]
-                }
-              ]
+              }
             },
             {
               "id": "node-input-last-name",
@@ -225,9 +194,9 @@
               "componentId": "component-input-text",
               "componentSet": "Form/Input",
               "componentMetadata": {
-                "key": "mock-component-input",
+                "key": "component-input-text",
                 "name": "Form/Input",
-                "componentSetId": "component-set-input",
+                "componentSetId": "component-input-text",
                 "componentSetName": "Form/Input",
                 "remote": true
               },
@@ -253,6 +222,18 @@
                 "label": "Last name",
                 "value": "Chen"
               },
+              "codeConnect": {
+                "componentName": "Input",
+                "importName": "Input",
+                "source": "packages/mui/src/Input.tsx",
+                "label": "React",
+                "version": "Code Connect CLI mock",
+                "snippetImports": [
+                  "import { Input } from \"@hugo-ui/mui\";"
+                ],
+                "snippet": "<Input label=\"Last name\" />",
+                "snippetNestedFunctions": []
+              },
               "layout": {
                 "width": 478,
                 "height": 76,
@@ -277,21 +258,7 @@
                 "y": 290,
                 "width": 478,
                 "height": 76
-              },
-              "overrides": [
-                {
-                  "id": "node-input-last-name-label",
-                  "overriddenFields": [
-                    "characters"
-                  ]
-                },
-                {
-                  "id": "node-input-last-name-value",
-                  "overriddenFields": [
-                    "characters"
-                  ]
-                }
-              ]
+              }
             },
             {
               "id": "node-footer",
@@ -304,8 +271,6 @@
                 "align": "end",
                 "itemSpacing": 12,
                 "gapToken": "space.3",
-                "primaryAxisSizingMode": "AUTO",
-                "counterAxisSizingMode": "AUTO",
                 "boundVariables": {
                   "itemSpacing": {
                     "type": "VARIABLE_ALIAS",
@@ -333,9 +298,9 @@
                   "componentId": "component-button-secondary",
                   "componentSet": "Action/Button",
                   "componentMetadata": {
-                    "key": "mock-component-button-secondary",
+                    "key": "component-button-secondary",
                     "name": "Action/Button",
-                    "componentSetId": "component-set-button",
+                    "componentSetId": "component-button-secondary",
                     "componentSetName": "Action/Button",
                     "remote": true
                   },
@@ -356,6 +321,18 @@
                   "text": {
                     "label": "Cancel"
                   },
+                  "codeConnect": {
+                    "componentName": "Button",
+                    "importName": "Button",
+                    "source": "packages/mui/src/Button.tsx",
+                    "label": "React",
+                    "version": "Code Connect CLI mock",
+                    "snippetImports": [
+                      "import { Button } from \"@hugo-ui/mui\";"
+                    ],
+                    "snippet": "<Button level=\"secondary\" size=\"medium\">Cancel</Button>",
+                    "snippetNestedFunctions": []
+                  },
                   "layout": {
                     "width": 92,
                     "height": 40,
@@ -374,15 +351,7 @@
                     "y": 604,
                     "width": 92,
                     "height": 40
-                  },
-                  "overrides": [
-                    {
-                      "id": "node-button-cancel-label",
-                      "overriddenFields": [
-                        "characters"
-                      ]
-                    }
-                  ]
+                  }
                 },
                 {
                   "id": "node-button-save",
@@ -391,9 +360,9 @@
                   "componentId": "component-button-primary",
                   "componentSet": "Action/Button",
                   "componentMetadata": {
-                    "key": "mock-component-button-primary",
+                    "key": "component-button-primary",
                     "name": "Action/Button",
-                    "componentSetId": "component-set-button",
+                    "componentSetId": "component-button-primary",
                     "componentSetName": "Action/Button",
                     "remote": true
                   },
@@ -414,6 +383,18 @@
                   "text": {
                     "label": "Save changes"
                   },
+                  "codeConnect": {
+                    "componentName": "Button",
+                    "importName": "Button",
+                    "source": "packages/mui/src/Button.tsx",
+                    "label": "React",
+                    "version": "Code Connect CLI mock",
+                    "snippetImports": [
+                      "import { Button } from \"@hugo-ui/mui\";"
+                    ],
+                    "snippet": "<Button level=\"primary\" size=\"medium\">Save changes</Button>",
+                    "snippetNestedFunctions": []
+                  },
                   "layout": {
                     "width": 118,
                     "height": 40,
@@ -432,15 +413,7 @@
                     "y": 604,
                     "width": 118,
                     "height": 40
-                  },
-                  "overrides": [
-                    {
-                      "id": "node-button-save-label",
-                      "overriddenFields": [
-                        "characters"
-                      ]
-                    }
-                  ]
+                  }
                 }
               ]
             }
@@ -4734,9 +4707,9 @@
         "componentId": "component-modal-transactional-medium",
         "componentSet": "Dialog/Modal",
         "componentMetadata": {
-          "key": "mock-component-modal",
+          "key": "component-modal-transactional-medium",
           "name": "Dialog/Modal",
-          "componentSetId": "component-set-modal",
+          "componentSetId": "component-modal-transactional-medium",
           "componentSetName": "Dialog/Modal",
           "remote": true
         },
@@ -4758,11 +4731,23 @@
           "title": "Edit profile",
           "description": "Edit your profile by changing the information below."
         },
+        "codeConnect": {
+          "componentName": "Modal",
+          "importName": "Modal",
+          "source": "packages/mui/src/Modal.tsx",
+          "label": "React",
+          "version": "Code Connect CLI mock",
+          "snippetImports": [
+            "import { Modal } from \"@hugo-ui/mui\";"
+          ],
+          "snippet": "<Modal open type=\"transactional\" title=\"Edit profile\" subTitle=\"Edit your profile by changing the information below.\">{children}</Modal>",
+          "snippetNestedFunctions": []
+        },
         "layout": {
           "width": 542,
           "height": 636,
           "mode": "vertical",
-          "align": "start",
+          "align": "stretch",
           "itemSpacing": 16,
           "gapToken": "space.4",
           "padding": {
@@ -4771,28 +4756,10 @@
             "top": 32,
             "bottom": 24
           },
-          "primaryAxisSizingMode": "AUTO",
-          "counterAxisSizingMode": "FIXED",
           "boundVariables": {
             "itemSpacing": {
               "type": "VARIABLE_ALIAS",
               "id": "space.4"
-            },
-            "paddingLeft": {
-              "type": "VARIABLE_ALIAS",
-              "id": "space.8"
-            },
-            "paddingRight": {
-              "type": "VARIABLE_ALIAS",
-              "id": "space.8"
-            },
-            "paddingTop": {
-              "type": "VARIABLE_ALIAS",
-              "id": "space.8"
-            },
-            "paddingBottom": {
-              "type": "VARIABLE_ALIAS",
-              "id": "space.6"
             }
           }
         },
@@ -4808,20 +4775,6 @@
           "width": 542,
           "height": 636
         },
-        "overrides": [
-          {
-            "id": "node-modal-title",
-            "overriddenFields": [
-              "characters"
-            ]
-          },
-          {
-            "id": "node-modal-description",
-            "overriddenFields": [
-              "characters"
-            ]
-          }
-        ],
         "children": [
           {
             "id": "node-input-first-name",
@@ -4830,9 +4783,9 @@
             "componentId": "component-input-text",
             "componentSet": "Form/Input",
             "componentMetadata": {
-              "key": "mock-component-input",
+              "key": "component-input-text",
               "name": "Form/Input",
-              "componentSetId": "component-set-input",
+              "componentSetId": "component-input-text",
               "componentSetName": "Form/Input",
               "remote": true
             },
@@ -4858,6 +4811,18 @@
               "label": "First name",
               "value": "Laura"
             },
+            "codeConnect": {
+              "componentName": "Input",
+              "importName": "Input",
+              "source": "packages/mui/src/Input.tsx",
+              "label": "React",
+              "version": "Code Connect CLI mock",
+              "snippetImports": [
+                "import { Input } from \"@hugo-ui/mui\";"
+              ],
+              "snippet": "<Input label=\"First name\" />",
+              "snippetNestedFunctions": []
+            },
             "layout": {
               "width": 478,
               "height": 76,
@@ -4882,21 +4847,7 @@
               "y": 198,
               "width": 478,
               "height": 76
-            },
-            "overrides": [
-              {
-                "id": "node-input-first-name-label",
-                "overriddenFields": [
-                  "characters"
-                ]
-              },
-              {
-                "id": "node-input-first-name-value",
-                "overriddenFields": [
-                  "characters"
-                ]
-              }
-            ]
+            }
           },
           {
             "id": "node-input-last-name",
@@ -4905,9 +4856,9 @@
             "componentId": "component-input-text",
             "componentSet": "Form/Input",
             "componentMetadata": {
-              "key": "mock-component-input",
+              "key": "component-input-text",
               "name": "Form/Input",
-              "componentSetId": "component-set-input",
+              "componentSetId": "component-input-text",
               "componentSetName": "Form/Input",
               "remote": true
             },
@@ -4933,6 +4884,18 @@
               "label": "Last name",
               "value": "Chen"
             },
+            "codeConnect": {
+              "componentName": "Input",
+              "importName": "Input",
+              "source": "packages/mui/src/Input.tsx",
+              "label": "React",
+              "version": "Code Connect CLI mock",
+              "snippetImports": [
+                "import { Input } from \"@hugo-ui/mui\";"
+              ],
+              "snippet": "<Input label=\"Last name\" />",
+              "snippetNestedFunctions": []
+            },
             "layout": {
               "width": 478,
               "height": 76,
@@ -4957,21 +4920,7 @@
               "y": 290,
               "width": 478,
               "height": 76
-            },
-            "overrides": [
-              {
-                "id": "node-input-last-name-label",
-                "overriddenFields": [
-                  "characters"
-                ]
-              },
-              {
-                "id": "node-input-last-name-value",
-                "overriddenFields": [
-                  "characters"
-                ]
-              }
-            ]
+            }
           },
           {
             "id": "node-footer",
@@ -4984,8 +4933,6 @@
               "align": "end",
               "itemSpacing": 12,
               "gapToken": "space.3",
-              "primaryAxisSizingMode": "AUTO",
-              "counterAxisSizingMode": "AUTO",
               "boundVariables": {
                 "itemSpacing": {
                   "type": "VARIABLE_ALIAS",
@@ -5013,9 +4960,9 @@
                 "componentId": "component-button-secondary",
                 "componentSet": "Action/Button",
                 "componentMetadata": {
-                  "key": "mock-component-button-secondary",
+                  "key": "component-button-secondary",
                   "name": "Action/Button",
-                  "componentSetId": "component-set-button",
+                  "componentSetId": "component-button-secondary",
                   "componentSetName": "Action/Button",
                   "remote": true
                 },
@@ -5036,6 +4983,18 @@
                 "text": {
                   "label": "Cancel"
                 },
+                "codeConnect": {
+                  "componentName": "Button",
+                  "importName": "Button",
+                  "source": "packages/mui/src/Button.tsx",
+                  "label": "React",
+                  "version": "Code Connect CLI mock",
+                  "snippetImports": [
+                    "import { Button } from \"@hugo-ui/mui\";"
+                  ],
+                  "snippet": "<Button level=\"secondary\" size=\"medium\">Cancel</Button>",
+                  "snippetNestedFunctions": []
+                },
                 "layout": {
                   "width": 92,
                   "height": 40,
@@ -5054,15 +5013,7 @@
                   "y": 604,
                   "width": 92,
                   "height": 40
-                },
-                "overrides": [
-                  {
-                    "id": "node-button-cancel-label",
-                    "overriddenFields": [
-                      "characters"
-                    ]
-                  }
-                ]
+                }
               },
               {
                 "id": "node-button-save",
@@ -5071,9 +5022,9 @@
                 "componentId": "component-button-primary",
                 "componentSet": "Action/Button",
                 "componentMetadata": {
-                  "key": "mock-component-button-primary",
+                  "key": "component-button-primary",
                   "name": "Action/Button",
-                  "componentSetId": "component-set-button",
+                  "componentSetId": "component-button-primary",
                   "componentSetName": "Action/Button",
                   "remote": true
                 },
@@ -5094,6 +5045,18 @@
                 "text": {
                   "label": "Save changes"
                 },
+                "codeConnect": {
+                  "componentName": "Button",
+                  "importName": "Button",
+                  "source": "packages/mui/src/Button.tsx",
+                  "label": "React",
+                  "version": "Code Connect CLI mock",
+                  "snippetImports": [
+                    "import { Button } from \"@hugo-ui/mui\";"
+                  ],
+                  "snippet": "<Button level=\"primary\" size=\"medium\">Save changes</Button>",
+                  "snippetNestedFunctions": []
+                },
                 "layout": {
                   "width": 118,
                   "height": 40,
@@ -5112,15 +5075,7 @@
                   "y": 604,
                   "width": 118,
                   "height": 40
-                },
-                "overrides": [
-                  {
-                    "id": "node-button-save-label",
-                    "overriddenFields": [
-                      "characters"
-                    ]
-                  }
-                ]
+                }
               }
             ]
           }
@@ -5232,9 +5187,9 @@
         "componentId": "component-input-text",
         "componentSet": "Form/Input",
         "componentMetadata": {
-          "key": "mock-component-input",
+          "key": "component-input-text",
           "name": "Form/Input",
-          "componentSetId": "component-set-input",
+          "componentSetId": "component-input-text",
           "componentSetName": "Form/Input",
           "remote": true
         },
@@ -5260,6 +5215,18 @@
           "label": "First name",
           "value": "Laura"
         },
+        "codeConnect": {
+          "componentName": "Input",
+          "importName": "Input",
+          "source": "packages/mui/src/Input.tsx",
+          "label": "React",
+          "version": "Code Connect CLI mock",
+          "snippetImports": [
+            "import { Input } from \"@hugo-ui/mui\";"
+          ],
+          "snippet": "<Input label=\"First name\" />",
+          "snippetNestedFunctions": []
+        },
         "layout": {
           "width": 478,
           "height": 76,
@@ -5284,21 +5251,7 @@
           "y": 198,
           "width": 478,
           "height": 76
-        },
-        "overrides": [
-          {
-            "id": "node-input-first-name-label",
-            "overriddenFields": [
-              "characters"
-            ]
-          },
-          {
-            "id": "node-input-first-name-value",
-            "overriddenFields": [
-              "characters"
-            ]
-          }
-        ]
+        }
       },
       "mapping": {
         "nodeId": "node-input-first-name",
@@ -5410,9 +5363,9 @@
         "componentId": "component-input-text",
         "componentSet": "Form/Input",
         "componentMetadata": {
-          "key": "mock-component-input",
+          "key": "component-input-text",
           "name": "Form/Input",
-          "componentSetId": "component-set-input",
+          "componentSetId": "component-input-text",
           "componentSetName": "Form/Input",
           "remote": true
         },
@@ -5438,6 +5391,18 @@
           "label": "Last name",
           "value": "Chen"
         },
+        "codeConnect": {
+          "componentName": "Input",
+          "importName": "Input",
+          "source": "packages/mui/src/Input.tsx",
+          "label": "React",
+          "version": "Code Connect CLI mock",
+          "snippetImports": [
+            "import { Input } from \"@hugo-ui/mui\";"
+          ],
+          "snippet": "<Input label=\"Last name\" />",
+          "snippetNestedFunctions": []
+        },
         "layout": {
           "width": 478,
           "height": 76,
@@ -5462,21 +5427,7 @@
           "y": 290,
           "width": 478,
           "height": 76
-        },
-        "overrides": [
-          {
-            "id": "node-input-last-name-label",
-            "overriddenFields": [
-              "characters"
-            ]
-          },
-          {
-            "id": "node-input-last-name-value",
-            "overriddenFields": [
-              "characters"
-            ]
-          }
-        ]
+        }
       },
       "mapping": {
         "nodeId": "node-input-last-name",
@@ -5588,9 +5539,9 @@
         "componentId": "component-button-secondary",
         "componentSet": "Action/Button",
         "componentMetadata": {
-          "key": "mock-component-button-secondary",
+          "key": "component-button-secondary",
           "name": "Action/Button",
-          "componentSetId": "component-set-button",
+          "componentSetId": "component-button-secondary",
           "componentSetName": "Action/Button",
           "remote": true
         },
@@ -5611,6 +5562,18 @@
         "text": {
           "label": "Cancel"
         },
+        "codeConnect": {
+          "componentName": "Button",
+          "importName": "Button",
+          "source": "packages/mui/src/Button.tsx",
+          "label": "React",
+          "version": "Code Connect CLI mock",
+          "snippetImports": [
+            "import { Button } from \"@hugo-ui/mui\";"
+          ],
+          "snippet": "<Button level=\"secondary\" size=\"medium\">Cancel</Button>",
+          "snippetNestedFunctions": []
+        },
         "layout": {
           "width": 92,
           "height": 40,
@@ -5629,15 +5592,7 @@
           "y": 604,
           "width": 92,
           "height": 40
-        },
-        "overrides": [
-          {
-            "id": "node-button-cancel-label",
-            "overriddenFields": [
-              "characters"
-            ]
-          }
-        ]
+        }
       },
       "mapping": {
         "nodeId": "node-button-cancel",
@@ -5740,9 +5695,9 @@
         "componentId": "component-button-primary",
         "componentSet": "Action/Button",
         "componentMetadata": {
-          "key": "mock-component-button-primary",
+          "key": "component-button-primary",
           "name": "Action/Button",
-          "componentSetId": "component-set-button",
+          "componentSetId": "component-button-primary",
           "componentSetName": "Action/Button",
           "remote": true
         },
@@ -5763,6 +5718,18 @@
         "text": {
           "label": "Save changes"
         },
+        "codeConnect": {
+          "componentName": "Button",
+          "importName": "Button",
+          "source": "packages/mui/src/Button.tsx",
+          "label": "React",
+          "version": "Code Connect CLI mock",
+          "snippetImports": [
+            "import { Button } from \"@hugo-ui/mui\";"
+          ],
+          "snippet": "<Button level=\"primary\" size=\"medium\">Save changes</Button>",
+          "snippetNestedFunctions": []
+        },
         "layout": {
           "width": 118,
           "height": 40,
@@ -5781,15 +5748,7 @@
           "y": 604,
           "width": 118,
           "height": 40
-        },
-        "overrides": [
-          {
-            "id": "node-button-save-label",
-            "overriddenFields": [
-              "characters"
-            ]
-          }
-        ]
+        }
       },
       "mapping": {
         "nodeId": "node-button-save",

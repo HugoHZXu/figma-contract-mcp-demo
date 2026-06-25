@@ -1,6 +1,6 @@
 {
   "schemaVersion": "code-connect-local-mock/v1",
-  "description": "Local Code Connect-style mapping metadata. This is not published to Figma and does not claim official Code Connect compatibility.",
+  "description": "Local contract-enriched projection of a Figma MCP get_code_connect_map result. This is not published to Figma and does not claim official Code Connect compatibility.",
   "componentPackage": "@hugo-ui/mui",
   "mappings": [
     {

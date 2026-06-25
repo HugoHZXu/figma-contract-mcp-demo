@@ -10,7 +10,7 @@ The MCP server in this repository is intended for local development and controll
 
 `hugo-ui` owns the real design-system source and publishes a versioned `@hugo-ui/mui` AI contract artifact through GitHub Releases.
 
-`figma-contract-mcp-demo` vendors one released artifact snapshot under `vendor/hugo-ui/mui-ai-contract/` as a reproducible fallback. The MCP tools can also resolve a locally cached GitHub Release artifact from `.cache/hugo-ui/mui-ai-contract/<version>/`.
+Design Contract MCP vendors one released artifact snapshot under `vendor/hugo-ui/mui-ai-contract/` as a reproducible fallback. The MCP tools can also resolve a locally cached GitHub Release artifact from `.cache/hugo-ui/mui-ai-contract/<version>/`.
 
 ## Contract Directory Boundaries
 
@@ -23,10 +23,10 @@ The MCP server in this repository is intended for local development and controll
 ## Context Flow
 
 1. `vendor/hugo-ui/mui-ai-contract/` contains the committed release artifact fallback, including `manifest.json`, component contracts, tokens, metadata, schema files, and `provenance.json`.
-2. `fixtures/figma/raw/edit-profile-modal.figma-file.mock.json` is a local Figma API-shaped snapshot mock with a `DOCUMENT` tree, a `CANVAS`, typed `componentProperties`, `componentId` references, text layers, component metadata, component set metadata, and style metadata.
-3. `scripts/normalize-figma-fixture.ts` deterministically converts the raw snapshot mock into the smaller fixture shape consumed by the demo tools.
-4. `fixtures/figma/edit-profile-modal.fixture.json` captures a single normalized local Figma-like frame while preserving source traceability back to the raw mock.
-5. `code-connect/manifest.json` maps selected design node IDs to `@hugo-ui/mui` component names and vendor contract files.
+2. `fixtures/figma/mcp/edit-profile-modal.mcp-context.json` is a local Figma MCP-shaped tool-result fixture. It records sparse XML metadata, React-like design context with `CodeConnectSnippet` markers, a `get_code_connect_map` result, and variable definitions.
+3. `scripts/normalize-figma-fixture.ts` deterministically converts the MCP-shaped fixture into the smaller fixture shape consumed by the demo tools.
+4. `fixtures/figma/edit-profile-modal.fixture.json` captures a single normalized local Figma-like frame while preserving source traceability back to the MCP-shaped capture.
+5. `code-connect/manifest.json` maps selected design node IDs to `@hugo-ui/mui` component names and vendor contract files. It is the local contract-enriched projection used by this demo, not a published Code Connect artifact.
 6. `code-connect/mock/` contains documentation-only Code Connect template shape mocks for `Modal`, `Input`, and `Button`. They are not part of the executable chain and must not be published.
 7. `mcp-server/src/contract-store.ts` resolves the requested contract selector (`vendor`, `latest`, `installed`, or a semver target) against local cache plus vendor fallback.
 8. `mcp-server/src/contract-adapters/hugo-ui-mui.ts` adapts the real `hugo-ui` contract shape into the validator's internal format while preserving raw contract data.
@@ -89,4 +89,4 @@ The internal shape is an implementation detail. The context pack should retain e
 
 ## Limitations
 
-This demo does not parse arbitrary Figma documents, publish Code Connect metadata, require a live `@hugo-ui/mui` npm install, or guarantee production-ready React. It uses a local Figma API-shaped raw mock, a deterministic normalization step, a local Code Connect-style manifest, and a verified AI contract artifact from either vendor fallback or local cache to show an architecture pattern.
+This demo does not parse arbitrary Figma documents, call the live Figma MCP server, publish Code Connect metadata, require a live `@hugo-ui/mui` npm install, or guarantee production-ready React. It uses a local Figma MCP-shaped tool-result fixture, a deterministic normalization step, a local contract-enriched Code Connect map projection, and a verified AI contract artifact from either vendor fallback or local cache to show an architecture pattern.

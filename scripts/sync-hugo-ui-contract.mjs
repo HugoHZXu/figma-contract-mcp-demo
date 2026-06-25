@@ -237,7 +237,7 @@ async function downloadFile(url, outputPath) {
 function githubHeaders() {
   const headers = {
     Accept: "application/vnd.github+json",
-    "User-Agent": "figma-contract-mcp-demo"
+    "User-Agent": "design-contract-mcp"
   };
 
   if (process.env.GITHUB_TOKEN) {

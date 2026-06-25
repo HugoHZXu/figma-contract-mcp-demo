@@ -1,19 +1,19 @@
-# figma-contract-mcp-demo
+# Design Contract MCP
 
 A contract-first design-to-code architecture demo that consumes a vendored `@hugo-ui/mui` AI contract snapshot.
 
 This repository is the contract consumer side of a two-repository demo:
 
 - [`hugo-ui`](https://github.com/HugoHZXu/hugo-ui) publishes a versioned `@hugo-ui/mui` AI contract artifact through GitHub Releases.
-- `figma-contract-mcp-demo` vendors that artifact snapshot and exposes it through MCP tools, a context pack, a validator, and a focused demo UI.
+- Design Contract MCP vendors that artifact snapshot and exposes it through MCP tools, a context pack, a validator, and a focused demo UI.
 
 ## What This Is
 
 This project shows AI application/tooling patterns:
 
-1. A local Figma API-shaped raw mock snapshot.
-2. Normalized Figma-like design data as JSON fixtures.
-3. Code Connect-style component mapping as local metadata.
+1. A local Figma MCP-shaped tool-result fixture.
+2. Normalized Figma-like design data derived from MCP context.
+3. Contract-enriched Code Connect mapping metadata.
 4. A vendored design-system AI contract snapshot from `@hugo-ui/mui`.
 5. A thin MCP server exposing design and codegen context.
 6. A validator for generated React component usage.
@@ -22,7 +22,7 @@ This project shows AI application/tooling patterns:
 ## What This Is Not
 
 - It is not a complete Figma-to-code product.
-- It does not connect to the live Figma API.
+- It does not connect to the live Figma MCP server or Figma API.
 - It does not publish or integrate with official Figma Code Connect.
 - It does not support arbitrary Figma files.
 - It does not attempt production-grade design fidelity.
@@ -44,8 +44,8 @@ vendor/hugo-ui/mui-ai-contract/
   reproducible vendored snapshot
         |
         v
-fixtures/figma/raw/
-  local Figma API-shaped snapshot mock
+fixtures/figma/mcp/
+  local Figma MCP-shaped tool-result fixture
         |
         v
 scripts/normalize-figma-fixture.ts
@@ -57,7 +57,7 @@ fixtures/figma/
         |
         v
 code-connect/manifest.json
-  local Code Connect-style node-to-component mapping
+  contract-enriched Code Connect node-to-component mapping
         |
         v
 mcp-server/
@@ -244,7 +244,7 @@ MCP logs are written to stderr as JSON lines. Supported `MCP_LOG_LEVEL` values a
 
 ## Run The Same Tools Locally
 
-Normalize the Figma API-shaped raw mock into the smaller fixture shape consumed by the MCP tools:
+Normalize the Figma MCP-shaped tool-result fixture into the smaller fixture shape consumed by this server:
 
 ```bash
 npm run figma:normalize
@@ -256,7 +256,7 @@ Generate the context pack used by the demo UI and validator:
 npm run context:pack
 ```
 
-`npm run context:pack` runs `npm run figma:normalize` first so the committed normalized fixture stays derived from the raw mock snapshot.
+`npm run context:pack` runs `npm run figma:normalize` first so the committed normalized fixture stays derived from the MCP-shaped capture fixture.
 
 Build generation context:
 
@@ -320,10 +320,10 @@ It is not a TypeScript compiler, visual diffing system, accessibility checker, o
 
 The trusted chain starts with a local design node and ends with a validation report:
 
-1. Raw snapshot: `fixtures/figma/raw/edit-profile-modal.figma-file.mock.json` uses a Figma API-shaped `document` tree with `DOCUMENT`, `CANVAS`, `FRAME`, `INSTANCE`, and `TEXT` nodes, plus local `components`, `componentSets`, and `styles` maps.
-2. Normalized fixture: `npm run figma:normalize` writes `fixtures/figma/edit-profile-modal.fixture.json`, preserving node IDs, component IDs, typed component properties, selected layout data, text overrides, and component metadata.
-3. Design node: the normalized fixture contains `node-input-first-name`, an `Input/Text` instance with label text and sample value text extracted from raw text layers. Sample value text is retained for traceability, but the mapping does not hard-code it as an `Input value` prop.
-4. Mapping: `code-connect/manifest.json` maps `node-input-first-name` to `Input` from `@hugo-ui/mui` and points at `vendor/hugo-ui/mui-ai-contract/components/Input.contract.json`.
+1. MCP capture fixture: `fixtures/figma/mcp/edit-profile-modal.mcp-context.json` records local Figma MCP-shaped tool results: sparse XML metadata, React-like design context, a `get_code_connect_map` result, and variable definitions.
+2. Normalized fixture: `npm run figma:normalize` writes `fixtures/figma/edit-profile-modal.fixture.json`, preserving node IDs, component IDs, typed component properties, selected layout data, Code Connect snippets, text values, and component metadata.
+3. Design node: the normalized fixture contains `node-input-first-name`, an `Input/Text` instance with label text and sample value text carried from the MCP-shaped Code Connect context. Sample value text is retained for traceability, but the mapping does not hard-code it as an `Input value` prop.
+4. Mapping: `code-connect/manifest.json` maps `node-input-first-name` to `Input` from `@hugo-ui/mui` and points at `vendor/hugo-ui/mui-ai-contract/components/Input.contract.json`. It is the local contract-enriched projection used by this demo, not a published Code Connect artifact.
 5. Contract: the vendored `Input` contract defines the import package, prop list, `aiUsage` policy, discouraged props, generation rules, validation rules, and token policy.
 6. Adapter: `mcp-server/src/contract-adapters/hugo-ui-mui.ts` converts the real contract shape into the internal validator format while preserving `rawContract` and policy metadata.
 7. Context pack: `npm run context:pack` writes `generated/edit-profile-modal.context-pack.json`, combining the fixture frame, mapping metadata, vendored contracts, token policy, pattern rules, provenance, and `expectedComponentUsage`.
@@ -339,9 +339,9 @@ npm run validate:bad
 ## Project Structure
 
 ```text
-fixtures/figma/raw/                     Local Figma API-shaped raw snapshot mocks.
+fixtures/figma/mcp/                     Local Figma MCP-shaped tool-result fixtures.
 fixtures/figma/                         Normalized local Figma-like JSON.
-code-connect/manifest.json              Local Code Connect-style mock manifest.
+code-connect/manifest.json              Local contract-enriched Code Connect map projection.
 code-connect/mock/                      Documentation-only Code Connect template shape mocks.
 .cache/hugo-ui/mui-ai-contract/         Ignored runtime cache for synced contract artifacts.
 vendor/hugo-ui/mui-ai-contract/         Vendored @hugo-ui/mui AI contract fallback snapshot.
@@ -350,7 +350,7 @@ mcp-server/                             MCP stdio, HTTP, HTTPS entries, adapter,
 demo-app/                               Vite + React demo UI with preview shim.
 generated/                              Static samples, captured MCP-run candidate, context pack, and audit report.
 docs/                                   Architecture notes for future work.
-scripts/normalize-figma-fixture.ts      Raw mock to normalized fixture conversion.
+scripts/normalize-figma-fixture.ts      Figma MCP-shaped capture to normalized fixture conversion.
 scripts/audit-generated-output.ts       Candidate validation and static-sample similarity audit.
 scripts/hugo-ui-contract.ts             Contract release listing, sync, status, and verification CLI.
 scripts/sync-hugo-ui-contract.mjs       Legacy release artifact sync script kept for reference.
@@ -358,7 +358,7 @@ scripts/sync-hugo-ui-contract.mjs       Legacy release artifact sync script kept
 
 ## Boundary Reminder
 
-All design input comes from fixtures. The raw snapshot is still a local mock, not a live Figma API response. Component API knowledge and token policy for the main chain come from a verified `@hugo-ui/mui` AI contract artifact, either the committed vendor fallback or a synced local cache entry. The `contracts/` tree is reserved for local pattern contracts, not component or token contracts. Code Connect is represented only as local mapping metadata and documentation-only template shape mocks. Generated React must go through the validator before it is treated as usable. No real Figma API, official Code Connect publish flow, or LLM call is part of this demo.
+All design input comes from fixtures. The MCP capture fixture is still local and does not call the live Figma MCP server or Figma REST API. Component API knowledge and token policy for the main chain come from a verified `@hugo-ui/mui` AI contract artifact, either the committed vendor fallback or a synced local cache entry. The `contracts/` tree is reserved for local pattern contracts, not component or token contracts. Code Connect is represented by a local contract-enriched map projection and documentation-only template shape mocks. Generated React must go through the validator before it is treated as usable. No real Figma API, official Code Connect publish flow, or LLM call is part of this demo.
 
 ## License
 

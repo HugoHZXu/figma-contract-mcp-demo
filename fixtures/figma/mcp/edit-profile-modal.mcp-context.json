@@ -1,0 +1,234 @@
+{
+  "schemaVersion": "figma-mcp-tool-results-fixture/v1",
+  "source": "local-figma-mcp-shaped-fixture",
+  "capturedAt": "2026-06-18T00:00:00.000Z",
+  "file": {
+    "key": "mock-profile-settings-file",
+    "name": "Profile Settings Demo",
+    "url": "https://www.figma.com/design/mock-profile-settings-file/Profile-Settings-Demo?node-id=frame-edit-profile"
+  },
+  "selection": {
+    "nodeId": "frame-edit-profile",
+    "name": "Edit Profile Modal",
+    "type": "FRAME"
+  },
+  "toolResults": {
+    "get_metadata": {
+      "format": "sparse-xml",
+      "content": "<figma fileKey=\"mock-profile-settings-file\" name=\"Profile Settings Demo\"><frame id=\"frame-edit-profile\" name=\"Edit Profile Modal\" type=\"FRAME\" x=\"0\" y=\"0\" width=\"686\" height=\"796\" layout=\"vertical\" align=\"center\" gap=\"16\" gapToken=\"space.4\"><instance id=\"node-modal\" name=\"Modal\" type=\"INSTANCE\" componentName=\"Dialog/Modal\" x=\"72\" y=\"80\" width=\"542\" height=\"636\" layout=\"vertical\" align=\"stretch\" gap=\"16\" gapToken=\"space.4\" paddingLeft=\"32\" paddingRight=\"32\" paddingTop=\"32\" paddingBottom=\"24\"><instance id=\"node-input-first-name\" name=\"Input/Text\" type=\"INSTANCE\" componentName=\"Form/Input\" x=\"104\" y=\"198\" width=\"478\" height=\"76\" layout=\"vertical\" gap=\"8\" gapToken=\"space.2\" /><instance id=\"node-input-last-name\" name=\"Input/Text\" type=\"INSTANCE\" componentName=\"Form/Input\" x=\"104\" y=\"290\" width=\"478\" height=\"76\" layout=\"vertical\" gap=\"8\" gapToken=\"space.2\" /><frame id=\"node-footer\" name=\"Modal/Footer\" type=\"FRAME\" x=\"104\" y=\"604\" width=\"478\" height=\"48\" layout=\"horizontal\" align=\"end\" gap=\"12\" gapToken=\"space.3\"><instance id=\"node-button-cancel\" name=\"Button/Secondary\" type=\"INSTANCE\" componentName=\"Action/Button\" x=\"360\" y=\"604\" width=\"92\" height=\"40\" layout=\"horizontal\" align=\"center\" gap=\"8\" /><instance id=\"node-button-save\" name=\"Button/Primary\" type=\"INSTANCE\" componentName=\"Action/Button\" x=\"464\" y=\"604\" width=\"118\" height=\"40\" layout=\"horizontal\" align=\"center\" gap=\"8\" /></frame></instance></frame></figma>"
+    },
+    "get_design_context": {
+      "format": "react-like-code",
+      "content": "<div data-node-id=\"frame-edit-profile\" className=\"flex h-[796px] w-[686px] items-start justify-center gap-4\"><CodeConnectSnippet nodeId=\"node-modal\" componentName=\"Modal\" designProperties={{ Type: 'transactional', State: 'open', Size: 'medium', title: 'Edit profile', description: 'Edit your profile by changing the information below.' }} imports=\"import { Modal } from '@hugo-ui/mui';\"><Modal open type=\"transactional\" title=\"Edit profile\" subTitle=\"Edit your profile by changing the information below.\"><CodeConnectSnippet nodeId=\"node-input-first-name\" componentName=\"Input\" designProperties={{ label: 'First name', value: 'Laura', Required: false }} imports=\"import { Input } from '@hugo-ui/mui';\"><Input label=\"First name\" /></CodeConnectSnippet><CodeConnectSnippet nodeId=\"node-input-last-name\" componentName=\"Input\" designProperties={{ label: 'Last name', value: 'Chen', Required: false }} imports=\"import { Input } from '@hugo-ui/mui';\"><Input label=\"Last name\" /></CodeConnectSnippet><div data-node-id=\"node-footer\" className=\"flex justify-end gap-3\"><CodeConnectSnippet nodeId=\"node-button-cancel\" componentName=\"Button\" designProperties={{ Hierarchy: 'secondary', Size: 'medium', label: 'Cancel' }} imports=\"import { Button } from '@hugo-ui/mui';\"><Button level=\"secondary\" size=\"medium\">Cancel</Button></CodeConnectSnippet><CodeConnectSnippet nodeId=\"node-button-save\" componentName=\"Button\" designProperties={{ Hierarchy: 'primary', Size: 'medium', label: 'Save changes' }} imports=\"import { Button } from '@hugo-ui/mui';\"><Button level=\"primary\" size=\"medium\">Save changes</Button></CodeConnectSnippet></div></Modal></CodeConnectSnippet></div>"
+    },
+    "get_code_connect_map": {
+      "componentPackage": "@hugo-ui/mui",
+      "mappings": {
+        "node-modal": {
+          "componentName": "Modal",
+          "importName": "Modal",
+          "figmaComponent": "Dialog/Modal",
+          "componentId": "component-modal-transactional-medium",
+          "source": "packages/mui/src/Modal.tsx",
+          "label": "React",
+          "version": "Code Connect CLI mock",
+          "snippetImports": ["import { Modal } from \"@hugo-ui/mui\";"],
+          "snippet": "<Modal open type=\"transactional\" title=\"Edit profile\" subTitle=\"Edit your profile by changing the information below.\">{children}</Modal>",
+          "snippetNestedFunctions": [],
+          "designProperties": {
+            "Type": {
+              "type": "VARIANT",
+              "value": "transactional"
+            },
+            "State": {
+              "type": "VARIANT",
+              "value": "open"
+            },
+            "Size": {
+              "type": "VARIANT",
+              "value": "medium"
+            }
+          },
+          "text": {
+            "title": "Edit profile",
+            "description": "Edit your profile by changing the information below."
+          },
+          "contractPath": "vendor/hugo-ui/mui-ai-contract/components/Modal.contract.json"
+        },
+        "node-input-first-name": {
+          "componentName": "Input",
+          "importName": "Input",
+          "figmaComponent": "Form/Input",
+          "componentId": "component-input-text",
+          "source": "packages/mui/src/Input.tsx",
+          "label": "React",
+          "version": "Code Connect CLI mock",
+          "snippetImports": ["import { Input } from \"@hugo-ui/mui\";"],
+          "snippet": "<Input label=\"First name\" />",
+          "snippetNestedFunctions": [],
+          "designProperties": {
+            "Filled": {
+              "type": "BOOLEAN",
+              "value": true
+            },
+            "Required": {
+              "type": "BOOLEAN",
+              "value": false
+            },
+            "State": {
+              "type": "VARIANT",
+              "value": "Rest"
+            },
+            "Background": {
+              "type": "VARIANT",
+              "value": "White"
+            }
+          },
+          "text": {
+            "label": "First name",
+            "value": "Laura"
+          },
+          "contractPath": "vendor/hugo-ui/mui-ai-contract/components/Input.contract.json"
+        },
+        "node-input-last-name": {
+          "componentName": "Input",
+          "importName": "Input",
+          "figmaComponent": "Form/Input",
+          "componentId": "component-input-text",
+          "source": "packages/mui/src/Input.tsx",
+          "label": "React",
+          "version": "Code Connect CLI mock",
+          "snippetImports": ["import { Input } from \"@hugo-ui/mui\";"],
+          "snippet": "<Input label=\"Last name\" />",
+          "snippetNestedFunctions": [],
+          "designProperties": {
+            "Filled": {
+              "type": "BOOLEAN",
+              "value": true
+            },
+            "Required": {
+              "type": "BOOLEAN",
+              "value": false
+            },
+            "State": {
+              "type": "VARIANT",
+              "value": "Rest"
+            },
+            "Background": {
+              "type": "VARIANT",
+              "value": "White"
+            }
+          },
+          "text": {
+            "label": "Last name",
+            "value": "Chen"
+          },
+          "contractPath": "vendor/hugo-ui/mui-ai-contract/components/Input.contract.json"
+        },
+        "node-button-cancel": {
+          "componentName": "Button",
+          "importName": "Button",
+          "figmaComponent": "Action/Button",
+          "componentId": "component-button-secondary",
+          "source": "packages/mui/src/Button.tsx",
+          "label": "React",
+          "version": "Code Connect CLI mock",
+          "snippetImports": ["import { Button } from \"@hugo-ui/mui\";"],
+          "snippet": "<Button level=\"secondary\" size=\"medium\">Cancel</Button>",
+          "snippetNestedFunctions": [],
+          "designProperties": {
+            "Hierarchy": {
+              "type": "VARIANT",
+              "value": "secondary"
+            },
+            "Size": {
+              "type": "VARIANT",
+              "value": "medium"
+            },
+            "State": {
+              "type": "VARIANT",
+              "value": "Rest"
+            }
+          },
+          "text": {
+            "label": "Cancel"
+          },
+          "contractPath": "vendor/hugo-ui/mui-ai-contract/components/Button.contract.json"
+        },
+        "node-button-save": {
+          "componentName": "Button",
+          "importName": "Button",
+          "figmaComponent": "Action/Button",
+          "componentId": "component-button-primary",
+          "source": "packages/mui/src/Button.tsx",
+          "label": "React",
+          "version": "Code Connect CLI mock",
+          "snippetImports": ["import { Button } from \"@hugo-ui/mui\";"],
+          "snippet": "<Button level=\"primary\" size=\"medium\">Save changes</Button>",
+          "snippetNestedFunctions": [],
+          "designProperties": {
+            "Hierarchy": {
+              "type": "VARIANT",
+              "value": "primary"
+            },
+            "Size": {
+              "type": "VARIANT",
+              "value": "medium"
+            },
+            "State": {
+              "type": "VARIANT",
+              "value": "Rest"
+            }
+          },
+          "text": {
+            "label": "Save changes"
+          },
+          "contractPath": "vendor/hugo-ui/mui-ai-contract/components/Button.contract.json"
+        }
+      }
+    },
+    "get_variable_defs": {
+      "variables": {
+        "space.2": {
+          "name": "Spacing/2",
+          "value": 8,
+          "type": "FLOAT"
+        },
+        "space.3": {
+          "name": "Spacing/3",
+          "value": 12,
+          "type": "FLOAT"
+        },
+        "space.4": {
+          "name": "Spacing/4",
+          "value": 16,
+          "type": "FLOAT"
+        },
+        "space.6": {
+          "name": "Spacing/6",
+          "value": 24,
+          "type": "FLOAT"
+        },
+        "space.8": {
+          "name": "Spacing/8",
+          "value": 32,
+          "type": "FLOAT"
+        }
+      },
+      "styles": {
+        "Typography/Title": {
+          "fontFamily": "Inter",
+          "fontWeight": 600,
+          "fontSize": 24,
+          "lineHeightPx": 32
+        },
+        "Typography/Body": {
+          "fontFamily": "Inter",
+          "fontWeight": 400,
+          "fontSize": 14,
+          "lineHeightPx": 20
+        }
+      }
+    }
+  }
+}

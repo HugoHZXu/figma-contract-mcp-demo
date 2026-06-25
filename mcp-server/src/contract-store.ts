@@ -510,7 +510,7 @@ async function downloadFile(url: string, outputPath: string) {
 function githubHeaders(): HeadersInit {
   const headers: Record<string, string> = {
     Accept: "application/vnd.github+json",
-    "User-Agent": "figma-contract-mcp-demo"
+    "User-Agent": "design-contract-mcp"
   };
 
   if (process.env.GITHUB_TOKEN) {

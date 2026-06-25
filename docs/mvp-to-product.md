@@ -8,7 +8,7 @@ The target product shape is still internal. This repository is not intended to b
 
 ### Current MVP
 
-The project does not connect to the live Figma API. Design input comes from committed JSON fixtures under `fixtures/figma/`, with one raw Figma API-shaped mock normalized into the smaller structure consumed by the MCP tools.
+The project does not connect to the live Figma MCP server or Figma REST API. Design input comes from committed JSON fixtures under `fixtures/figma/`, with one Figma MCP-shaped tool-result fixture normalized into the smaller structure consumed by the demo tools.
 
 This keeps the demo deterministic and avoids mixing contract validation with live design-data concerns.
 
@@ -30,7 +30,7 @@ Likely additions:
 
 ### Current MVP
 
-The repository uses `code-connect/manifest.json` as local Code Connect-style mapping metadata. The files under `code-connect/mock/` are documentation-only mocks. Nothing is published to Figma, and the project does not claim official Code Connect compatibility.
+The repository uses `code-connect/manifest.json` as a local contract-enriched projection of a Figma MCP `get_code_connect_map` result. The files under `code-connect/mock/` are documentation-only mocks. Nothing is published to Figma, and the project does not claim official Code Connect compatibility.
 
 ### Real Product Direction
 

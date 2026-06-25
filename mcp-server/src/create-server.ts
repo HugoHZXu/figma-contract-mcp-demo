@@ -15,7 +15,7 @@ const logger = createLogger("mcp-tools");
 
 export function createMcpServer() {
   const server = new McpServer({
-    name: "figma-contract-mcp-demo",
+    name: "design-contract-mcp",
     version: "0.1.0"
   }, {
     instructions:
@@ -38,7 +38,7 @@ export function createMcpServer() {
 
   server.tool(
     "get_code_connect_map",
-    "Resolve a design node to its local Code Connect-style component mapping.",
+    "Resolve a design node to its local contract-enriched Code Connect component mapping.",
     {
       nodeId: z.string()
     },
